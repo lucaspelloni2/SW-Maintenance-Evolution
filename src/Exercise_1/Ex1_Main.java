@@ -16,7 +16,7 @@ public class Ex1_Main {
         List<String> oracle = FileReader.readFile(ORACLE_PATH);
 
 
-        Map <String, List<ClassDescription>> results = new HashMap<>();
+        Map<String, List<ClassDescription>> results = new HashMap<>();
 
         final int[] totalNumberOfCorrectLinks = {0};
 
@@ -46,37 +46,61 @@ public class Ex1_Main {
         final String RANKED_LIST_75_PATH = "/Users/LuckyP/Desktop/UZH/Master/Software Maintenance and Evolution/Coding/SW-Maintenance-Evolution/src/Exercise_1/Easy_Clinic_Data/rankedlists/ranked_list75.txt";
 
 
-        List<String> rankedList = FileReader.readFile(RANKED_LIST_55_PATH);
-        final int[] numberOfLinkedDocuments = {0};
-
-
-        rankedList.forEach(line -> {
-            final boolean[] areReallyLinked = {false};
-            String newLine = line.replace(".txt", "");
-            String[] temp = newLine.split(",");
-            String useCaseSourceId = temp[0];
-            String classDescTargetId = temp[1];
-
-            List<ClassDescription> realLinkedClassDesc = results.get(useCaseSourceId);
-
-            if (realLinkedClassDesc != null) {
-                realLinkedClassDesc.forEach(cDesc -> {
-                    if (cDesc.getId().equals(classDescTargetId)) {
-                        numberOfLinkedDocuments[0]++;
-                    }
-                });
-            }
-
-        });
-
-        System.out.println("Ranked List size: " +rankedList.size());
-        System.out.println("Total number of linked documents " + numberOfLinkedDocuments[0]);
-        System.out.println("Precision " );
-        System.out.println("Recall ");
+        List<String> rankedLists = new ArrayList<>();
+        rankedLists.add(RANKED_LIST_55_PATH);
+        rankedLists.add(RANKED_LIST_65_PATH);
+        rankedLists.add(RANKED_LIST_75_PATH);
 
 
 
 
+        for (String rList : rankedLists) {
+            List<String> rankedList = FileReader.readFile(rList);
+            final int[] numberOfLinkedDocuments = {0};
 
+
+            // for each computed similarity (i.e., for each relation between an use case and a class description)
+            // search in the oracle map if these two software artifacts are really linked together or not
+            // if yes, increment the number of linked documents
+            rankedList.forEach(line -> {
+                final boolean[] areReallyLinked = {false};
+                String newLine = line.replace(".txt", "");
+                String[] temp = newLine.split(",");
+                String useCaseSourceId = temp[0];
+                String classDescTargetId = temp[1];
+
+                List<ClassDescription> realLinkedClassDesc = results.get(useCaseSourceId);
+
+                if (realLinkedClassDesc != null) {
+                    realLinkedClassDesc.forEach(cDesc -> {
+                        if (cDesc.getId().equals(classDescTargetId)) {
+                            //System.out.println(useCaseSourceId + " vs " +classDescTargetId +" are linked");
+                            numberOfLinkedDocuments[0]++;
+                        }
+                    });
+                }
+
+            });
+
+
+            double numberOfRetrievedLinks = rankedList.size();
+            double numberOfLinkedLinks = numberOfLinkedDocuments[0];
+
+            double recall = numberOfLinkedLinks / numberOfRetrievedLinks;
+            double precision = numberOfLinkedLinks / totalNumberOfCorrectLinks[0];
+
+
+            System.out.println("\nRanked list: " + rList.split("rankedlists")[1]);
+            System.out.println("Recall: " + numberOfLinkedLinks + " / " +  numberOfRetrievedLinks + "  =  " + recall);
+            System.out.println("Precision: " + numberOfLinkedLinks + " / " + totalNumberOfCorrectLinks[0] + "  =  " + precision + "\n\n");
+
+
+        }
+
+
+    }
+
+    public static double convertStringToDouble(String number) {
+        return Double.parseDouble(number);
     }
 }
