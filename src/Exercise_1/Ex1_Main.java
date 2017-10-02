@@ -80,19 +80,16 @@ public class Ex1_Main {
                     });
                 }
 
-            });
 
+            });
 
             double numberOfRetrievedLinks = rankedList.size();
             double numberOfLinkedLinks = numberOfLinkedDocuments[0];
-
-            double recall = numberOfLinkedLinks / numberOfRetrievedLinks;
-            double precision = numberOfLinkedLinks / totalNumberOfCorrectLinks[0];
-
-
+            double recall = numberOfLinkedLinks / totalNumberOfCorrectLinks[0];
+            double precision = numberOfLinkedLinks /numberOfRetrievedLinks ;
             System.out.println("\nRanked list: " + rList.split("rankedlists")[1]);
-            System.out.println("Recall: " + numberOfLinkedLinks + " / " +  numberOfRetrievedLinks + "  =  " + recall);
-            System.out.println("Precision: " + numberOfLinkedLinks + " / " + totalNumberOfCorrectLinks[0] + "  =  " + precision + "\n\n");
+            System.out.println("Recall: " + numberOfLinkedLinks + " / " +  totalNumberOfCorrectLinks[0] + "  =  " + recall);
+            System.out.println("Precision: " + numberOfLinkedLinks + " / " + numberOfRetrievedLinks + "  =  " + precision + "\n\n");
 
 
         }
